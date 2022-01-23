@@ -1,0 +1,18 @@
+# Metricbeat Autodiscover
+
+## Example for Redis, using Kubernetes secrets 
+```
+# https://github.com/elastic/beats/blob/master/metricbeat/docs/autodiscover-kubernetes-config.asciidoc
+metricbeat.autodiscover:
+  providers:
+    - type: kubernetes
+      templates:
+        - condition:
+            contains:
+              kubernetes.labels.app: "redis"
+          config:
+            - module: redis
+              metricsets: ["info", "keyspace"]
+              hosts: "${data.host}:6379"
+              password: "${kubernetes.default.somesecret.value}"
+```
